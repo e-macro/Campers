@@ -4,6 +4,8 @@ export default function Catalog() {
     
     
     return (
-
+        <div>
+            bruh
+        </div>
     )
 }
