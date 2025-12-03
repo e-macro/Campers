@@ -2,45 +2,37 @@
     background: var(--color-input);
 }
 
-/* .logo {
-    position: absolute;
-    left: 64px;
+.logo {
     width: 136px;
     height: 16px;
 }
 
+.leftSection {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .container {
     display: flex;
-    justify-content: center;
     align-items: center;
     max-width: 1440px;
-    padding: 0 64px;
+    padding: 24px 64px;
     margin: 0 auto;
-    position: relative;
 }
 
 .nav {
-    /* display: flex;
-    justify-content: flex-start;
-    /* gap: 450px;
-    flex: 2;
-} */
-
-.container {
     display: flex;
-    align-items: center;
-    justify-content: center; /* центрує nav */
-    max-width: 1440px;
-    padding: 28px 64px;
-    margin: 0 auto;
-    position: relative; /* для absolute positioning logo */
-}
+    flex: 1;
+    justify-content: center;
+} 
 
-.logo {
-    position: absolute;
-    left: 64px; /* прилипає до лівого краю padding */
-    width: 136px;
-    height: 16px;
+
+.rightSection {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .navList {
