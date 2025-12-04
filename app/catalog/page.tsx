@@ -46,7 +46,7 @@ export default function Catalog() {
                             <hr className={css.stroke}/>
                             <div className={css.equipmentFilters}>
                                 {filterEquipment.map((filter) => (
-                                    <FilterIcon key={filter} filterValue={filter} />
+                                    <FilterIcon key={filter} filterValue={filter} onClick={() => setFilter(filter)} />
                                 ))}
                             </div>
                         </div>

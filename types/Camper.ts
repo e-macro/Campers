@@ -39,13 +39,13 @@ export type Camper = {
 
 export type Equipment = 
 {
-    type: 'AC' | 'Bathroom' | 'Kitchen' | 'TV' | 'Radio' | 'Refrigerator' | 'Microwave' | 'Gas' | 'Water'
-    engine: 'Petrol' | 'Diesel' | 'Hybrid';
-    transmission: 'Automatic' | 'Manual';
+    type: 'AC' | 'bathroom' | 'kitchen' | 'TV' | 'radio' | 'refrigerator' | 'microwave' | 'gas' | 'water'
+    engine: 'petrol' | 'diesel' | 'hybrid';
+    transmission: 'automatic' | 'manual';
 };
 
 export type FilterOptions = {
-    equipment?: 'AC' | 'Bathroom' | 'Kitchen' | 'TV' | 'Automatic' | 'Manual';
-    type?: 'Van' | 'Fully Integrated' | 'Alcove';
+    equipment: 'AC' | 'bathroom' | 'kitchen' | 'TV' | 'automatic' | 'manual';
+    type: 'Van' | 'Fully Integrated' | 'Alcove';
 }
 
