@@ -1,8 +1,14 @@
 import axios from "axios";
 
-const BASE_URL = 'https://66b1f8e71ca8ad33d4f5f63e.mockapi.io/'
+const url = new URL('https://66b1f8e71ca8ad33d4f5f63e.mockapi.io/campers');
+url.searchParams.append('limit', '4');
 
-export const getCampers = async () => {
-    const res = await  axios.get(`${BASE_URL}campers`);
+const urlId = 'https://66b1f8e71ca8ad33d4f5f63e.mockapi.io/campers';
+
+export const getCampers = async (page: number, location: string, filter: string) => {
+    url.searchParams.set('page', page.toString());
+    url.searchParams.set('location', location);
+    url.searchParams.set(filter.toString(), "true");
+    const res = await axios.get(`${url}`);
     return res.data;
 }

@@ -36,3 +36,16 @@ export type Camper = {
     gallery: Gallery[];
     reviews: Review[];
 }
+
+export type Equipment = 
+{
+    type: 'AC' | 'Bathroom' | 'Kitchen' | 'TV' | 'Radio' | 'Refrigerator' | 'Microwave' | 'Gas' | 'Water'
+    engine: 'Petrol' | 'Diesel' | 'Hybrid';
+    transmission: 'Automatic' | 'Manual';
+};
+
+export type FilterOptions = {
+    equipment?: 'AC' | 'Bathroom' | 'Kitchen' | 'TV' | 'Automatic' | 'Manual';
+    type?: 'Van' | 'Fully Integrated' | 'Alcove';
+}
+
