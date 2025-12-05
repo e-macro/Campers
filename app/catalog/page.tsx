@@ -3,35 +3,62 @@
 import { useState } from 'react';
 import css from './catalog.module.css';
 import { getCampers } from '@/lib/api/api';
-import { useQuery } from '@tanstack/react-query';
+import { dehydrate, HydrationBoundary, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import FilterIcon from '@/components/FilterIcon/FilterIcon';
 import { FilterOptions } from '@/types/Camper';
 import CamperList from '@/components/CamperList/CamperList';
+import useFilterStore from '@/lib/store/filters';
 
-export default function Catalog() {
-    const [pageNum, setPageNum] = useState(1);
-    const [location, setLocation] = useState('');
-    const [filter, setFilter] = useState('');
+export default function Catalog() { 
+
+    const { 
+        filters, 
+        toggleFilter, 
+        location, 
+        setLocation, 
+        form, 
+        setForm,
+        transmission,
+        setTransmission,
+        _hasHydrated  
+    } = useFilterStore();
+
+    const queryClient = useQueryClient()
+
     const [activeFilters, setActiveFilters] = useState({
-        location: '',
-        filter: ''
+        location: location,
+        equipment: filters,
+        transmission: transmission,
+        form: form
     })
 
     const filterEquipment: FilterOptions['equipment'][] = ['AC', 'bathroom', 'kitchen', 'TV', 'automatic'];
-    const filterType: FilterOptions['type'][] = ['Van', 'Fully Integrated', 'Alcove'];
+    const filterType: FilterOptions['type'][] = ['panelTruck', 'FullyIntegrated', 'Alcove'];
 
-    const { data } = useQuery({
-        queryKey: ['campers', pageNum, activeFilters],
-        queryFn: () => getCampers(pageNum, activeFilters.location, activeFilters.filter),
-        
+    const { data,
+            fetchNextPage,
+            hasNextPage,
+            isFetchingNextPage
+    } = useInfiniteQuery({
+        queryKey: ['campers', activeFilters],
+        queryFn: ({pageParam = 1}) => getCampers(pageParam, activeFilters),
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.items.length === 4 ? allPages.length + 1 : undefined;
+        },
+        initialPageParam: 1,
+        enabled: _hasHydrated,      
     })
 
+    const allCampers = data?.pages.flatMap(page => page.items) ?? []
+
     const handleSearch = () => {
+        queryClient.removeQueries({queryKey: ['campers']});
         setActiveFilters({
             location: location,
-            filter: filter
-        })
-        setPageNum(1);
+            equipment: filters,
+            transmission: transmission,
+            form: form
+        });
     }
 
     return (
@@ -44,6 +71,7 @@ export default function Catalog() {
                             type="text" 
                             placeholder='City' 
                             className={css.locationInput} 
+                            value={location}
                             onChange={(e) => setLocation(e.target.value)}
                             />
                             <svg width="20" height="20" viewBox="0 0 20 20" className={`${css.inputIcon} ${location && css.iconActive }`}>
@@ -58,7 +86,18 @@ export default function Catalog() {
                             <hr className={css.stroke}/>
                             <div className={css.equipmentFilters}>
                                 {filterEquipment.map((filter) => (
-                                    <FilterIcon key={filter} filterValue={filter} onClick={() => setFilter(filter)} />
+                                    <FilterIcon 
+                                    key={filter} 
+                                    filterValue={filter} 
+                                    onClick={() => {
+                                    if (filter === 'automatic') {
+                                        setTransmission('automatic');
+                                    } else {
+                                        toggleFilter(filter);
+                                    }
+                                    }}
+                                    isActive={filter === 'automatic' ? transmission === 'automatic' : filters.includes(filter)}
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -67,7 +106,12 @@ export default function Catalog() {
                             <hr className={css.stroke}/>
                             <div className={css.typeFilters}>
                                 {filterType.map((filter) => (
-                                    <FilterIcon key={filter} filterValue={filter} />
+                                    <FilterIcon 
+                                    key={filter} 
+                                    filterValue={filter} 
+                                    onClick={() => setForm(filter)}
+                                    isActive={form === filter} 
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -77,10 +121,15 @@ export default function Catalog() {
                     </button>
                 </div>
                 <div className={css.camperList}>
-                    {data && <CamperList campers={data?.items} />}
-                <button className={css.loadButton} onClick={() => setPageNum(pageNum + 1)}>
-                    Load more
-                </button>
+                    <HydrationBoundary state={dehydrate(queryClient)}>
+                        <CamperList campers={allCampers} />
+                    </HydrationBoundary>
+                    {hasNextPage && <button 
+                    className={css.loadButton} 
+                    onClick={() => fetchNextPage()} 
+                    disabled={isFetchingNextPage}>
+                        {isFetchingNextPage ? 'Loading...' : 'Load more'}
+                    </button>}
                 </div>
             </div>
     )

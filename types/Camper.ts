@@ -46,6 +46,6 @@ export type Equipment =
 
 export type FilterOptions = {
     equipment: 'AC' | 'bathroom' | 'kitchen' | 'TV' | 'automatic' | 'manual';
-    type: 'Van' | 'Fully Integrated' | 'Alcove';
+    type: 'panelTruck' | 'FullyIntegrated' | 'Alcove';
 }
 

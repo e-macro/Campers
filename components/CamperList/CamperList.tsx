@@ -3,16 +3,16 @@
 import { Camper } from '@/types/Camper';
 import css from './CamperList.module.css';
 import Image from 'next/image';
-import { useState } from 'react';
 import MiscIcon from '../MiscIcon/MiscIcon';
 import Link from 'next/link';
+import useFavoritesStore from '@/lib/store/favorites';
 
 interface CamperProps {
     campers: Camper[];
 }
 
 const CamperList = ({campers}: CamperProps) => {
-    const [isActive, setIsActive] = useState(false);
+    const { favorites, toggleFavorite } = useFavoritesStore();
 
     const avgRating = (camper: Camper) => {
         const total = camper.reviews.reduce((sum, review) => sum + review.reviewer_rating, 0);
@@ -21,13 +21,18 @@ const CamperList = ({campers}: CamperProps) => {
 
     const equipmentKeys = ['AC', 'bathroom', 'kitchen', 'TV', 'refrigerator'];
 
+    const handleFavoriteClick = (camperId: string) => {
+        toggleFavorite(camperId);
+    }
+
     return(<>
         {campers.map((camper) =>{ 
             const activeEquipment = equipmentKeys.filter(key => camper[key as keyof Camper]);
+            const isFavorite = favorites.includes(camper.id);
             return(
             <div key={camper.id} className={css.camperCard}>
                 <div className={css.camperImage}>
-                    <Image src={camper.gallery[0].thumb} alt={camper.name} width={200} height={150} />
+                    <Image src={camper.gallery[0].thumb} alt={camper.name} width={200} height={150}/>
                 </div>
                 <div className={css.camperInfo}>
                     <div className={css.infoTop}>
@@ -35,8 +40,8 @@ const CamperList = ({campers}: CamperProps) => {
                             <h2>{camper.name}</h2>
                             <div className={css.infoTopLeft}>
                                 <h2>&euro;{camper.price}.00</h2>
-                                <button className={css.heartButton} onClick={() => setIsActive(!isActive)}>
-                                    <svg width={26} height={24} viewBox='0 0 26 24' className={`${css.heartIcon} ${isActive && css.iconActive }`}>
+                                <button className={css.heartButton} onClick={() => handleFavoriteClick(camper.id)}>
+                                    <svg width={26} height={24} viewBox='0 0 26 24' className={`${css.heartIcon} ${isFavorite && css.iconActive }`}>
                                         <use href='/icons.svg#heart' />
                                     </svg>
                                 </button>
