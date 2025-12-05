@@ -6,21 +6,33 @@ import { getCampers } from '@/lib/api/api';
 import { useQuery } from '@tanstack/react-query';
 import FilterIcon from '@/components/FilterIcon/FilterIcon';
 import { FilterOptions } from '@/types/Camper';
+import CamperList from '@/components/CamperList/CamperList';
 
 export default function Catalog() {
     const [pageNum, setPageNum] = useState(1);
     const [location, setLocation] = useState('');
     const [filter, setFilter] = useState('');
+    const [activeFilters, setActiveFilters] = useState({
+        location: '',
+        filter: ''
+    })
 
-    const filterEquipment: FilterOptions['equipment'][] = ['AC', 'Bathroom', 'Kitchen', 'TV', 'Automatic'];
+    const filterEquipment: FilterOptions['equipment'][] = ['AC', 'bathroom', 'kitchen', 'TV', 'automatic'];
     const filterType: FilterOptions['type'][] = ['Van', 'Fully Integrated', 'Alcove'];
 
     const { data } = useQuery({
-        queryKey: ['campers', pageNum, location, filter],
-        queryFn: () => getCampers(pageNum, location, filter),
+        queryKey: ['campers', pageNum, activeFilters],
+        queryFn: () => getCampers(pageNum, activeFilters.location, activeFilters.filter),
         
     })
-    console.log(data);
+
+    const handleSearch = () => {
+        setActiveFilters({
+            location: location,
+            filter: filter
+        })
+        setPageNum(1);
+    }
 
     return (
             <div className={css.container}>
@@ -60,11 +72,15 @@ export default function Catalog() {
                             </div>
                         </div>
                     </div>
-                    <button className={css.button}>
+                    <button className={css.button} onClick={handleSearch}>
                         Search
                     </button>
                 </div>
                 <div className={css.camperList}>
+                    {data && <CamperList campers={data?.items} />}
+                <button className={css.loadButton} onClick={() => setPageNum(pageNum + 1)}>
+                    Load more
+                </button>
                 </div>
             </div>
     )

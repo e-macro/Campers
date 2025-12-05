@@ -14,7 +14,7 @@ export type Camper = {
     name: string;
     price: number;
     rating: number;
-    locaiton: string;
+    location: string;
     description: string;
     form: string;
     length: string;

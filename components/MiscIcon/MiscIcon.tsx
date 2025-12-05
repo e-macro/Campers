@@ -1,28 +1,45 @@
-import { Equipment } from "@/types/Camper";
 import css from "./MiscIcon.module.css";
 
 interface FilterIconProps {
-    type: Equipment;
-    engine?: Equipment;
-    transmission?: Equipment;
+    type: string;
+    label?: string;
 }
 
-const FilterIcon = ({type, engine, transmission}: FilterIconProps) => {
+const EQUIPMENT_CONFIG: Record<string, { icon: string; label?: string }> = {
+    AC: { icon: 'wind', label: 'AC' },
+    bathroom: { icon: 'ph_shower', label: 'Bathroom' },
+    kitchen: { icon: 'cup-hot', label: 'Kitchen' },
+    TV: { icon: 'tv', label: 'TV' },
+    refrigerator: { icon: 'solar_fridge-outline', label: 'Refrigerator' },
+    microwave: { icon: 'lucide_microwave', label: 'Microwave' },
+    gas: { icon: 'hugeicons_gas-stove', label: 'Gas' },
+    water: { icon: 'ion_water-outline', label: 'Water' },
+
+    engine: { icon: 'fuel_pump' },
+    transmission: { icon: 'diagram' },
+};
+
+const MiscIcon = ({type, label}: FilterIconProps) => {
+    const config = EQUIPMENT_CONFIG[type];
+
+    if (!config) {
+        return null;
+    }
+
+    const displayLabel = label ?? config.label;
+
+    if (!displayLabel) {
+        return null;
+    }
+
     return(
-        <>
-            {type.type === 'AC' && <div className={css.icon}>AC</div>}
-            {type.type === 'Bathroom' && <div className={css.icon}>Bathroom</div>}
-            {type.type === 'Kitchen' && <div className={css.icon}>Kitchen</div>}
-            {type.type === 'TV' && <div className={css.icon}>TV</div>}
-            {type.type === 'Radio' && <div className={css.icon}>Radio</div>}
-            {type.type === 'Refrigerator' && <div className={css.icon}>Refrigerator</div>}
-            {type.type === 'Microwave' && <div className={css.icon}>Microwave</div>}
-            {type.type === 'Gas' && <div className={css.icon}>Gas</div>}
-            {type.type === 'Water' && <div className={css.icon}>Water</div>}
-            {engine && <div className={css.icon}>{type.engine}</div>}
-            {transmission && <div className={css.icon}>{type.transmission}</div>}
-        </>
+        <div className={css.icon}>
+            <svg width="20" height="20" viewBox="0 0 20 20" className={css.iconSvg}>
+                <use href={`/icons.svg#${config.icon}`} />
+            </svg>
+            <p className={css.iconText}>{displayLabel}</p>
+        </div>
     )
 }
 
-export default FilterIcon;
+export default MiscIcon;

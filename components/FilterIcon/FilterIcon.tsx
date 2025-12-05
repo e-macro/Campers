@@ -24,7 +24,7 @@ const FilterIcon = ({ filterValue, onClick }: FilterIconProps) => {
                     </p>
                 </button>
             </div>}
-            {filterValue === 'Automatic' &&
+            {filterValue === 'automatic' &&
             <div onClick={onClick}>
                 <button className={`${css.icon} ${isActive && css.iconActive}` } onClick={() => setIsActive(!isActive)}>
                     <svg width="32" height="32" viewBox="0 0 32 32" className={css.iconSvg}>
@@ -35,7 +35,7 @@ const FilterIcon = ({ filterValue, onClick }: FilterIconProps) => {
                     </p>
                 </button>
             </div>}
-            {filterValue === 'Kitchen' &&
+            {filterValue === 'kitchen' &&
             <div onClick={onClick}>
                 <button className={`${css.icon} ${isActive && css.iconActive}` } onClick={() => setIsActive(!isActive)}>
                     <svg width="32" height="32" viewBox="0 0 32 32" className={css.iconSvg}>
@@ -57,7 +57,7 @@ const FilterIcon = ({ filterValue, onClick }: FilterIconProps) => {
                     </p>
                 </button>
             </div>}
-            {filterValue === 'Bathroom' && 
+            {filterValue === 'bathroom' && 
                 <div onClick={onClick}>
                     <button className={`${css.icon} ${isActive && css.iconActive}` } onClick={() => setIsActive(!isActive)}>
                     <svg width="32" height="32" viewBox="0 0 32 32" className={css.iconSvg}>
