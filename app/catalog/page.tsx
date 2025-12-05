@@ -1,13 +1,14 @@
 'use client'
 
-import { useState } from 'react';
 import css from './catalog.module.css';
 import { getCampers } from '@/lib/api/api';
-import { dehydrate, HydrationBoundary, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import FilterIcon from '@/components/FilterIcon/FilterIcon';
 import { FilterOptions } from '@/types/Camper';
 import CamperList from '@/components/CamperList/CamperList';
 import useFilterStore from '@/lib/store/filters';
+import useCamperStore from '@/lib/store/campers';
+import { useEffect } from 'react';
+
 
 export default function Catalog() { 
 
@@ -19,46 +20,41 @@ export default function Catalog() {
         form, 
         setForm,
         transmission,
-        setTransmission,
-        _hasHydrated  
+        setTransmission, 
+        _hasHydrated,
+        activeFilters,
+        applyFilters
     } = useFilterStore();
-
-    const queryClient = useQueryClient()
-
-    const [activeFilters, setActiveFilters] = useState({
-        location: location,
-        equipment: filters,
-        transmission: transmission,
-        form: form
-    })
+    const { campers, currentPage, hasMore, setCampers, addCampers, clearCampers, setHasMore }= useCamperStore()
 
     const filterEquipment: FilterOptions['equipment'][] = ['AC', 'bathroom', 'kitchen', 'TV', 'automatic'];
     const filterType: FilterOptions['type'][] = ['panelTruck', 'FullyIntegrated', 'Alcove'];
 
-    const { data,
-            fetchNextPage,
-            hasNextPage,
-            isFetchingNextPage
-    } = useInfiniteQuery({
-        queryKey: ['campers', activeFilters],
-        queryFn: ({pageParam = 1}) => getCampers(pageParam, activeFilters),
-        getNextPageParam: (lastPage, allPages) => {
-            return lastPage.items.length === 4 ? allPages.length + 1 : undefined;
-        },
-        initialPageParam: 1,
-        enabled: _hasHydrated,      
-    })
+    // const { data,
+    // } = useQuery({
+    //     queryKey: ['campers', activeFilters, currentPage],
+    //     queryFn: () => getCampers(currentPage, activeFilters),    
+    // })
 
-    const allCampers = data?.pages.flatMap(page => page.items) ?? []
+    useEffect(() => {
+        if(_hasHydrated && campers.length === 0) {
+            getCampers(1, activeFilters).then((res) => {
+                setCampers(res.items);
+                setHasMore(res.items.length === 4);
+            })
+        }
+    }, [_hasHydrated, activeFilters, campers.length, setCampers, setHasMore]);
+
+    const handleLoadMore = async () => {
+        const nextPage = currentPage + 1;
+        const res = await getCampers(nextPage, activeFilters);
+        addCampers(res.items);
+        setHasMore(res.items.length === 4);
+    }
 
     const handleSearch = () => {
-        queryClient.removeQueries({queryKey: ['campers']});
-        setActiveFilters({
-            location: location,
-            equipment: filters,
-            transmission: transmission,
-            form: form
-        });
+        clearCampers()
+        applyFilters();
     }
 
     return (
@@ -121,14 +117,11 @@ export default function Catalog() {
                     </button>
                 </div>
                 <div className={css.camperList}>
-                    <HydrationBoundary state={dehydrate(queryClient)}>
-                        <CamperList campers={allCampers} />
-                    </HydrationBoundary>
-                    {hasNextPage && <button 
+                        <CamperList campers={campers} />
+                    {hasMore && <button 
                     className={css.loadButton} 
-                    onClick={() => fetchNextPage()} 
-                    disabled={isFetchingNextPage}>
-                        {isFetchingNextPage ? 'Loading...' : 'Load more'}
+                    onClick={handleLoadMore} >
+                        Load More
                     </button>}
                 </div>
             </div>

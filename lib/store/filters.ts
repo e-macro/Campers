@@ -11,8 +11,16 @@ interface FilterProps {
     setForm: (value: string) => void;
     transmission: string;
     setTransmission: (value: string) => void;
+    activeFilters: {
+        location: string;
+        equipment: string[];
+        form: string;
+        transmission: string;
+    };
+    applyFilters: () => void;
     resetFilters: () => void;
-    _hasHydrated?: boolean;
+    _hasHydrated: boolean;
+    setHasHydrated: () => void;
 }
 
 const useFilterStore = create<FilterProps>()(persist(
@@ -21,7 +29,14 @@ const useFilterStore = create<FilterProps>()(persist(
         location: '',
         form: '',
         transmission: '',
+        activeFilters: {
+            location: '',
+            equipment: [],
+            form: '',
+            transmission: ''
+        },
         _hasHydrated: false,
+        setHasHydrated: () => set({ _hasHydrated: true }),
         toggleFilter: (value) => set((state) => ({
             filters: state.filters.includes(value)
                 ? state.filters.filter((item) => item !== value)
@@ -34,22 +49,33 @@ const useFilterStore = create<FilterProps>()(persist(
         setTransmission: (value) => set((state) => ({ 
             transmission: state.transmission === value ? '' : value 
         })),
+        applyFilters: () => set((state) => ({
+            activeFilters: {
+                location: state.location,
+                equipment: state.filters,
+                form: state.form,
+                transmission: state.transmission
+            }
+        })),
         resetFilters: () => set({ 
             filters: [], 
             location: '', 
             form: '', 
-            transmission: '' 
+            transmission: '',
+            activeFilters: { location: '', equipment: [], form: '', transmission: '' }
         }),
     }),
-    { name: 'filter-storage',
-        onRehydrateStorage: (state) => {
-            state._hasHydrated = true;
+    { 
+        name: 'filter-storage',
+        onRehydrateStorage: () => (state) => {
+            state?.setHasHydrated();
         },
         partialize: (state) => ({ 
             filters: state.filters,
             form: state.form,
             transmission: state.transmission,
-            location: state.location
+            location: state.location,
+            activeFilters: state.activeFilters
         })
     }
 ));
