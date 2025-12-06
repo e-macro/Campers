@@ -24,6 +24,8 @@ const CamperFeatures = ({ id }: FeaturesProps) => {
     return (
         <div className={css.container}>
             <div className={css.equipFeatures}>
+                <MiscIcon type='engine' label={camper.engine} />
+                <MiscIcon type='transmission' label={camper.transmission} />
                 {activeEquipment.map((item) => (
                     <MiscIcon key={item} type={item as keyof Camper} />
                 ))}
