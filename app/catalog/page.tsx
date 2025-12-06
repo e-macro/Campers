@@ -9,7 +9,6 @@ import useFilterStore from '@/lib/store/filters';
 import useCamperStore from '@/lib/store/campers';
 import { useEffect, useState } from 'react';
 
-
 export default function Catalog() { 
 
     const { 
@@ -25,12 +24,17 @@ export default function Catalog() {
         activeFilters,
         applyFilters
     } = useFilterStore();
+
     const { campers, currentPage, hasMore, setCampers, addCampers, clearCampers, setHasMore }= useCamperStore()
     const [isLoading, setIsLoading] = useState(false);
     const [isEmpty, setIsEmpty] = useState(false);
 
+
+
+
     const filterEquipment: FilterOptions['equipment'][] = ['AC', 'bathroom', 'kitchen', 'TV', 'automatic'];
     const filterType: FilterOptions['type'][] = ['panelTruck', 'FullyIntegrated', 'Alcove'];
+
 
     useEffect(() => {
         if(_hasHydrated && campers.length === 0) {
