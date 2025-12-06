@@ -17,11 +17,15 @@ export const getCampers = async (page: number, filters: {
     if (filters.transmission) params.transmission = filters.transmission;
     if (filters.form) params.form = filters.form.toLowerCase().replace(' ', '');
     
-    // Equipment як окремі параметри
     filters.equipment.forEach(eq => {
-        params[eq] = true;  // AC=true, bathroom=true...
+        params[eq] = true;
     });
     
     const res = await axios.get(url, { params });
+    return res.data;
+};
+
+export const getCamperById = async (id: number) => {
+    const res = await axios.get(`${url}/${id}`);
     return res.data;
 };

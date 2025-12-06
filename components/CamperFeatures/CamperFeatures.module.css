@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 44px 52px;
+    
+}
+
+.equipFeatures {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.specsFeatures {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    color: var(--color-main);
+}
+
+.stroke {
+    stroke-width: 1px;
+    stroke: var(--color-gray-light);
+}
+
+.specs {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.spec {
+    display: flex;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    text-align: center;
+    color: var(--color-main);
+    justify-content: space-between;
+}

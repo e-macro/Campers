@@ -30,12 +30,6 @@ export default function Catalog() {
     const filterEquipment: FilterOptions['equipment'][] = ['AC', 'bathroom', 'kitchen', 'TV', 'automatic'];
     const filterType: FilterOptions['type'][] = ['panelTruck', 'FullyIntegrated', 'Alcove'];
 
-    // const { data,
-    // } = useQuery({
-    //     queryKey: ['campers', activeFilters, currentPage],
-    //     queryFn: () => getCampers(currentPage, activeFilters),    
-    // })
-
     useEffect(() => {
         if(_hasHydrated && campers.length === 0) {
             getCampers(1, activeFilters).then((res) => {

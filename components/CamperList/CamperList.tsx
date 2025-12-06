@@ -19,7 +19,7 @@ const CamperList = ({campers}: CamperProps) => {
         return (total / camper.reviews.length).toFixed(1);
     }
 
-    const equipmentKeys = ['AC', 'bathroom', 'kitchen', 'TV', 'refrigerator'];
+    const equipmentKeys = ['AC', 'bathroom', 'kitchen', 'TV', 'refrigerator', 'radio'];
 
     const handleFavoriteClick = (camperId: string) => {
         toggleFavorite(camperId);

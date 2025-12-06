@@ -18,7 +18,6 @@ interface FilterProps {
         transmission: string;
     };
     applyFilters: () => void;
-    resetFilters: () => void;
     _hasHydrated: boolean;
     setHasHydrated: () => void;
 }
@@ -57,13 +56,6 @@ const useFilterStore = create<FilterProps>()(persist(
                 transmission: state.transmission
             }
         })),
-        resetFilters: () => set({ 
-            filters: [], 
-            location: '', 
-            form: '', 
-            transmission: '',
-            activeFilters: { location: '', equipment: [], form: '', transmission: '' }
-        }),
     }),
     { 
         name: 'filter-storage',

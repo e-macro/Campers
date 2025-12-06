@@ -14,6 +14,7 @@ const EQUIPMENT_CONFIG: Record<string, { icon: string; label?: string }> = {
     microwave: { icon: 'lucide_microwave', label: 'Microwave' },
     gas: { icon: 'hugeicons_gas-stove', label: 'Gas' },
     water: { icon: 'ion_water-outline', label: 'Water' },
+    radio: { icon: 'radio', label: 'Radio' },
 
     engine: { icon: 'fuel_pump' },
     transmission: { icon: 'diagram' },
