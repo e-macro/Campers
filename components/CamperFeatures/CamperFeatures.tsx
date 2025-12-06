@@ -3,22 +3,14 @@
 import { Camper } from "@/types/Camper"
 import MiscIcon from "../MiscIcon/MiscIcon";
 import css from './CamperFeatures.module.css'
-import { useEffect, useState } from "react";
-import { getCamperById } from "@/lib/api/api";
 
 interface FeaturesProps {
-    id: string;
+    camper: Camper;
 }
 
-const CamperFeatures = ({ id }: FeaturesProps) => {
+const CamperFeatures = ({ camper }: FeaturesProps) => {
 
-    const [camper, setCamper] = useState<Camper>({} as Camper);
-    useEffect(() => {
-        getCamperById(Number(id)).then((data) => {
-            setCamper(data);
-        });
-    }, [id]);
-    const equipmentKeys = ['AC', 'bathroom', 'kitchen', 'TV', 'refrigerator', 'radio'];
+    const equipmentKeys = ['AC', 'bathroom', 'kitchen', 'TV', 'refrigerator', 'radio', 'microwave', 'gas', 'water'];
     const activeEquipment = equipmentKeys.filter(key => camper[key as keyof Camper]);
 
     const camperForm = {

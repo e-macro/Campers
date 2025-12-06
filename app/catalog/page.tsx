@@ -7,7 +7,7 @@ import { FilterOptions } from '@/types/Camper';
 import CamperList from '@/components/CamperList/CamperList';
 import useFilterStore from '@/lib/store/filters';
 import useCamperStore from '@/lib/store/campers';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 
 export default function Catalog() { 
@@ -26,6 +26,8 @@ export default function Catalog() {
         applyFilters
     } = useFilterStore();
     const { campers, currentPage, hasMore, setCampers, addCampers, clearCampers, setHasMore }= useCamperStore()
+    const [isLoading, setIsLoading] = useState(false);
+    const [isEmpty, setIsEmpty] = useState(false);
 
     const filterEquipment: FilterOptions['equipment'][] = ['AC', 'bathroom', 'kitchen', 'TV', 'automatic'];
     const filterType: FilterOptions['type'][] = ['panelTruck', 'FullyIntegrated', 'Alcove'];
@@ -35,7 +37,13 @@ export default function Catalog() {
             getCampers(1, activeFilters).then((res) => {
                 setCampers(res.items);
                 setHasMore(res.items.length === 4);
+                setIsLoading(false);
             })
+            .catch(() => {
+                setIsLoading(false);
+                setIsEmpty(true);
+                setHasMore(false);
+            });
         }
     }, [_hasHydrated, activeFilters, campers.length, setCampers, setHasMore]);
 
@@ -49,6 +57,8 @@ export default function Catalog() {
     const handleSearch = () => {
         clearCampers()
         applyFilters();
+        setIsLoading(true);
+        setIsEmpty(false);
     }
 
     return (
@@ -111,12 +121,13 @@ export default function Catalog() {
                     </button>
                 </div>
                 <div className={css.camperList}>
-                        <CamperList campers={campers} />
-                    {hasMore && <button 
+                    {isEmpty ? <div>No campers found.</div> : <CamperList campers={campers} />}
+                    {isLoading ? <div>Loading...</div> : hasMore && <button 
                     className={css.loadButton} 
                     onClick={handleLoadMore} >
                         Load More
                     </button>}
+
                 </div>
             </div>
     )

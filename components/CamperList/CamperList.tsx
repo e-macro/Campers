@@ -29,6 +29,8 @@ const CamperList = ({campers}: CamperProps) => {
         {campers.map((camper) =>{ 
             const activeEquipment = equipmentKeys.filter(key => camper[key as keyof Camper]);
             const isFavorite = favorites.includes(camper.id);
+            const camperEngine = camper.engine.charAt(0).toUpperCase() + camper.engine.slice(1);
+            const camperTransmission = camper.transmission.charAt(0).toUpperCase() + camper.transmission.slice(1);
             return(
             <div key={camper.id} className={css.camperCard}>
                 <div className={css.camperImage}>
@@ -52,7 +54,7 @@ const CamperList = ({campers}: CamperProps) => {
                             <svg width={16} height={16} viewBox='0 0 16 16' className={css.ratingIcon}>
                                 <use href='/icons.svg#rating' />
                             </svg>
-                            {avgRating(camper)}({camper.reviews.length} reviews)
+                            <u>{avgRating(camper)}({camper.reviews.length} reviews)</u>
                         </p>
                         <p className={css.numberInfo}>
                             <svg width={16} height={16} viewBox='0 0 16 16' className={css.locationIcon}>
@@ -63,8 +65,8 @@ const CamperList = ({campers}: CamperProps) => {
                     </div>
                     <p className={css.text}>{camper.description}</p>
                     <div className={css.infoTags}>
-                        <MiscIcon type='engine' label={camper.engine} />
-                        <MiscIcon type='transmission' label={camper.transmission} />
+                        <MiscIcon type='engine' label={camperEngine} />
+                        <MiscIcon type='transmission' label={camperTransmission} />
                         {activeEquipment.map((key) => (
                             camper[key as keyof Camper] && <MiscIcon key={key} type={key} />
                         ))}
