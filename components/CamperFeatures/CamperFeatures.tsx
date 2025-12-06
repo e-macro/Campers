@@ -21,6 +21,12 @@ const CamperFeatures = ({ id }: FeaturesProps) => {
     const equipmentKeys = ['AC', 'bathroom', 'kitchen', 'TV', 'refrigerator', 'radio'];
     const activeEquipment = equipmentKeys.filter(key => camper[key as keyof Camper]);
 
+    const camperForm = {
+        panelTruck: 'Panel truck',
+        FullyIntegrated: 'Fully integrated',
+        Alcove: 'Alcove'
+    }
+
     return (
         <div className={css.container}>
             <div className={css.equipFeatures}>
@@ -34,7 +40,7 @@ const CamperFeatures = ({ id }: FeaturesProps) => {
                 <h3 className={css.title}>Vehicle details</h3>
                 <hr className={css.stroke}/>
                 <div className={css.specs}>
-                    <p className={css.spec}><span>Form:</span> {camper.form}</p>
+                    <p className={css.spec}><span>Form:</span> {camperForm[camper.form as keyof typeof camperForm]}</p>
                     <p className={css.spec}><span>Length:</span> {camper.length}</p>
                     <p className={css.spec}><span>Width:</span> {camper.width}</p>
                     <p className={css.spec}><span>Height:</span> {camper.height}</p>

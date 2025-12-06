@@ -3,7 +3,10 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 44px 52px;
-    
+    border-radius: 10px;
+    background-color: var(--color-input);
+    height: 588px;
+    width: 631px;
 }
 
 .equipFeatures {
